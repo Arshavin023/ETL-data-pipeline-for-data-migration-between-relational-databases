@@ -107,10 +107,12 @@ print("Number of New rows on staging datawarehouse = ", len(new_records))
 
 # Insert new records from MySQL OLTP database into DB2 data warehouse.
 def insert_records(records):
-    for row in records:
-        %sql insert into sales_data(rowid,product_id,customer_id,quantity) values{row}
-        print('one row successfully inserted')
+	for row in records:
+		insertQuery = f"insert into sales_data(rowid, product_id, customer_id, quantity) values{row}"
+		ibm_db.exec_immediate(conn, insertQuery)
+		print("one row successfully inserted")
         
+
 insert_records(new_records)
 print("New rows inserted into production datawarehouse = ", len(new_records))
 
