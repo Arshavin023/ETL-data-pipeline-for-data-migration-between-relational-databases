@@ -5,15 +5,11 @@ import logging
 import sys
 from sqlalchemy import create_engine
 
-# Load SQL magic
-%load_ext sql
-%sql ibm_db_sa://USERNAME:PASSWORD@HOSTNAME:PORT/DATABASE?security=SSL
-
 # Connect to MySQL
-database = 'database'
-user = 'username'
-password = 'password'
-host = 'host'
+database = 'sales'
+user = 'admin'
+password = 'admin123!'
+host = 'practice-database.clnqvq7wvxsr.us-east-1.rds.amazonaws.com'
 connection = mysql.connector.connect(user=user, password=password,host=host,database=database)
 print ("Connected to MySQL database:",database, "as user:",user, "on host:",host)
 
@@ -51,10 +47,10 @@ for row in cursor.fetchall():
 
 
 # Connect to DB2
-dsn_hostname = "HOSTNAME"
-dsn_uid = "USERNAME"
-dsn_pwd = "PASSWORD"
-dsn_port = "PORT"
+dsn_hostname = "1bbf73c5-d84a-4bb0-85b9-ab1a4348f4a4.c3n41cmd0nqnrk39u98g.databases.appdomain.cloud"
+dsn_uid = "drk24122"
+dsn_pwd = "244Pkd4s8q21cDTp"
+dsn_port = "32286"
 dsn_database = "BLUDB"
 dsn_driver = "{IBM DB2 ODBC DRIVER}"
 dsn_protocol = "TCPIP"
@@ -107,14 +103,13 @@ print("Number of New rows on staging datawarehouse = ", len(new_records))
 
 # Insert new records from MySQL OLTP database into DB2 data warehouse.
 def insert_records(records):
-	for row in records:
-		insertQuery = f"insert into sales_data(rowid, product_id, customer_id, quantity) values{row}"
-		ibm_db.exec_immediate(conn, insertQuery)
-		print("one row successfully inserted")
+    for row in records:
+        insertQuery = f"insert into sales_data(rowid, product_id, customer_id, quantity) values{row}"
+        ibm_db.exec_immediate(conn, insertQuery)
+    print("New rows inserted into production datawarehouse = ", len(records))
         
-
 insert_records(new_records)
-print("New rows inserted into production datawarehouse = ", len(new_records))
+
 
 
 # Verify by checking total number of rows
